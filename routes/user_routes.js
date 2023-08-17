@@ -4,17 +4,14 @@ const User = require('../models/user_models'); //this returns a model of 'studen
 const BlogModel = require('../models/blog_model')
 // const {verifyToken} = require('./auth_routes');
 const authRoutes = require('./auth_routes'); 
-const cloudinary = require('cloudinary').v2; //for image uploading
+const cloudinary = require('./cloudinary_config')
+
 
 const DEFAULT_PROFILE_IMAGE = 'https://res.cloudinary.com/dvmjj1jwt/image/upload/v1691922615/default_img_ormosn.png'
 const { extractPublicId } = require('cloudinary-build-url');//used in image uploading to delete previous profile pic from cloudinary
 
 
-cloudinary.config({
-  cloud_name: 'dvmjj1jwt',
-  api_key: '745194548474512',
-  api_secret: 'bcc1uj1-ytL0pSOup6tWA0Sicik'
-});
+
 
 module.exports = {cloudinary};
 

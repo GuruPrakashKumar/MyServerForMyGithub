@@ -3,7 +3,8 @@ const express = require('express');
 const router = express.Router();
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcrypt');
-const jwtSecretKey = "guruprakashjwtsecretkey";
+const jwtSecretKey = process.env.JWT_SECRET_KEY;
+
 const User = require('../models/user_models');
 
 

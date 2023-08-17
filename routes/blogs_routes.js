@@ -3,15 +3,9 @@ const express = require('express');
 const router = express.Router();
 const BlogModel = require('../models/blog_model');
 const User = require('../models/user_models');
-const cloudinary = require('cloudinary').v2;
 // const {verifyToken} = require('./auth_routes');
 const authRoutes = require('./auth_routes'); 
-
-cloudinary.config({
-  cloud_name: 'dvmjj1jwt',
-  api_key: '745194548474512',
-  api_secret: 'bcc1uj1-ytL0pSOup6tWA0Sicik'
-});
+const cloudinary = require('./cloudinary_config')
 
 
 // Like Blog Route

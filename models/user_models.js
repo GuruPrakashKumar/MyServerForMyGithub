@@ -7,7 +7,7 @@ const newSchema = new Schema({
   email: String,
   password: String,
   imgPath: String,
-  likedPosts: [{ type: Schema.Types.ObjectId, ref: 'BlogModel' }],
+  likedPosts: [Schema.Types.ObjectId],
   dislikedPosts: [Schema.Types.ObjectId],
 },
 { versionKey: false }//it is set to false because before, it was sending extra field "__v":0

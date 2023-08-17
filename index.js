@@ -5,9 +5,11 @@ const cors = require('cors');
 const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const fileUpload = require('express-fileupload');
+require('dotenv').config();
+const mongodbAtlasDatabaseUrl = process.env.MONGODB_ATLAS_DATABASE_LINK;
 
 
-mongoose.connect("mongodb+srv://guruprakash745:25nI99xmD2q3ZuJX@cluster0.pxswliq.mongodb.net/GuruDatabase?retryWrites=true&w=majority", { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect(mongodbAtlasDatabaseUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 
 app.use(fileUpload({ useTempFiles: true }));
 app.use(cors());
