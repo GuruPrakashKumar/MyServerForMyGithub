@@ -34,6 +34,3 @@ server.listen(port,'0.0.0.0',()=>{
   console.log("server connected to socket io")
 })
 
-app.listen(port, () => {
-  console.log('port running on ' + port);
-});
