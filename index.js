@@ -9,11 +9,7 @@ require('dotenv').config();
 const mongodbAtlasDatabaseUrl = process.env.MONGODB_ATLAS_DATABASE_LINK;
 const http = require('http')
 const server = http.createServer(app)
-const io = require("socket.io")(server,{
-  cors:{
-    origin:"*",
-  },
-})
+const io = require("socket.io")(server)
 mongoose.connect(mongodbAtlasDatabaseUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 io.on('connection',(socket)=>{
   console.log("connected to io")
@@ -34,6 +30,10 @@ app.use('/', authRoutes.router);
 app.use('/', blogsRoutes);
 app.use('/', userRoutes);
 
-app.listen(port,'0.0.0.0', () => {
+server.listen(port,'0.0.0.0',()=>{
+  console.log("server connected to socket io")
+})
+
+app.listen(port, () => {
   console.log('port running on ' + port);
 });
