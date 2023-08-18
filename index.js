@@ -34,6 +34,6 @@ app.use('/', authRoutes.router);
 app.use('/', blogsRoutes);
 app.use('/', userRoutes);
 
-app.listen(port, () => {
+app.listen(port,'0.0.0.0', () => {
   console.log('port running on ' + port);
 });
