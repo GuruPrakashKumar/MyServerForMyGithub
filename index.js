@@ -13,6 +13,10 @@ const io = require("socket.io")(server)
 mongoose.connect(mongodbAtlasDatabaseUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 io.on('connection',(socket)=>{
   console.log("connected to io")
+  console.log(socket.id)
+  socket.on('/test',(msg)=>{
+    console.log(msg);
+  })
 })
 
 app.use(fileUpload({ useTempFiles: true }));//for image file uploading
