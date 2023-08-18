@@ -11,13 +11,20 @@ const http = require('http')
 const server = http.createServer(app)
 const io = require("socket.io")(server)
 mongoose.connect(mongodbAtlasDatabaseUrl, { useNewUrlParser: true, useUnifiedTopology: true });
+var clients = {};//saves the all clients data which are connected to socketio server
 io.on('connection',(socket)=>{
   console.log("connected to io")
   console.log(socket.id+"has joined")
-  socket.on('signin',(msg)=>{
-    console.log(msg);
+  socket.on('signin',(id)=>{
+    console.log(id);
+    clients[id] = socket
+    console.log(clients)
+  })
+  socket.on("message",(msg)=>{
+    console.log(msg)
   })
 })
+
 
 app.use(fileUpload({ useTempFiles: true }));//for image file uploading
 app.use(express.json());
