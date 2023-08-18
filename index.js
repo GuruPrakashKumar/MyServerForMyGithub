@@ -13,8 +13,8 @@ const io = require("socket.io")(server)
 mongoose.connect(mongodbAtlasDatabaseUrl, { useNewUrlParser: true, useUnifiedTopology: true });
 io.on('connection',(socket)=>{
   console.log("connected to io")
-  console.log(socket.id)
-  socket.on('/test',(msg)=>{
+  console.log(socket.id+"has joined")
+  socket.on('signin',(msg)=>{
     console.log(msg);
   })
 })
