@@ -9,19 +9,20 @@ const newSchema = new Schema({
   imgPath: String,
   likedPosts: [Schema.Types.ObjectId],
   dislikedPosts: [Schema.Types.ObjectId],
-  chats: [chatSchema]
-},
-{ versionKey: false }//it is set to false because before, it was sending extra field "__v":0
-);
-const chatSchema = new mongoose.Schema({
-  targetEmail: String,
-  messages: [
-      {
+  chats: [
+    {
+      targetEmail: String,
+      messages: [
+        {
           type: String,
-          text: String
-      }
-  ]
-});
+          text: String,
+        },
+      ],
+    },
+  ],
+},
+{ versionKey: false }
+);
 
 newSchema.pre('save',async function(next){
   try{
