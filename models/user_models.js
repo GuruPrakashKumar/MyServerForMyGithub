@@ -9,6 +9,17 @@ const newSchema = new Schema({
   imgPath: String,
   likedPosts: [Schema.Types.ObjectId],
   dislikedPosts: [Schema.Types.ObjectId],
+  chats: [
+    {
+      targetEmail: String,
+      messages: [
+        {
+          type: String, //type will be either "sentMsg" or "receivedMsg" to differentiate.
+          text: String,
+        },
+      ],
+    },
+  ],
 },
 { versionKey: false }//it is set to false because before, it was sending extra field "__v":0
 );
