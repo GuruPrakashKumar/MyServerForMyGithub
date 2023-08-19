@@ -1,4 +1,5 @@
 const clients = {};
+const { json } = require('express');
 const User = require('../models/user_models');
 
 
@@ -42,10 +43,10 @@ async function addMessage(senderEmail, targetEmail, message) {
       //if the email id of the target is present in the user's chat database
       sender.chats.push({
         targetEmail: targetEmail,
-        messages: [{
+        messages: [json({
           type: 'sentMsg',
           text: message,
-        }],
+        })],
       });
     }
 
