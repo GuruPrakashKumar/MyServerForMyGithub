@@ -53,27 +53,27 @@ async function addMessage(senderEmail, targetEmail, message) {
     console.log('Message added for sender successfully');
 
     //now we also have to save the msg for the target's chat database
-    const target = await User.findOne({email: targetEmail});
-    if(!target){
-      throw new Error('Target not found');
-    }
-    const senderChatForTargetDatabase = target.chats.find(chat=> chat.targetEmail === senderEmail);
-    if(senderChatForTargetDatabase){
-      senderChatForTargetDatabase.messages.push({
-        type:'receivedMsg',
-        text: message
-      });
-    }else{
-      target.chats.push({
-        targetEmail: senderEmail,
-        messages:[{
-          type:'receivedMsg',
-          text:message,
-        }],
-      })
-    }
-    await target.save();//saved msg for target also
-    console.log('message added for target successfully')
+    // const target = await User.findOne({email: targetEmail});
+    // if(!target){
+    //   throw new Error('Target not found');
+    // }
+    // const senderChatForTargetDatabase = target.chats.find(chat=> chat.targetEmail === senderEmail);
+    // if(senderChatForTargetDatabase){
+    //   senderChatForTargetDatabase.messages.push({
+    //     type:'receivedMsg',
+    //     text: message
+    //   });
+    // }else{
+    //   target.chats.push({
+    //     targetEmail: senderEmail,
+    //     messages:[{
+    //       type:'receivedMsg',
+    //       text:message,
+    //     }],
+    //   })
+    // }
+    // await target.save();//saved msg for target also
+    // console.log('message added for target successfully')
   } catch (error) {
     console.error('Error adding message:', error.message);
   }
