@@ -76,7 +76,7 @@ async function addMessage(senderEmail, targetEmail, message) {
 
       receiver.markModified('chats');
 
-      await target.save();//saved msg for target also
+      await receiver.save();//saved msg for target also
     }else{
       receiver.chats.push({
         targetEmail: senderEmail,
@@ -85,7 +85,7 @@ async function addMessage(senderEmail, targetEmail, message) {
           type:'receivedMsg',
         }],
       })
-      await target.save();//saved msg for target also
+      await receiver.save();//saved msg for target also
     }
     console.log('message added for target successfully')
   } catch (error) {
