@@ -13,7 +13,8 @@ const newSchema = new Schema({
     {
       targetEmail: String,
       messages:[{
-        String
+        
+        text: String
       }]
 
     },
