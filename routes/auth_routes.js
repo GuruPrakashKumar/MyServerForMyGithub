@@ -6,6 +6,7 @@ const bcrypt = require('bcrypt');
 const jwtSecretKey = process.env.JWT_SECRET_KEY;
 
 const User = require('../models/user_models');
+const userChatModel = require('../models/chat_model')
 
 
 function verifyToken(req, resp, next) {
@@ -44,6 +45,13 @@ router.post('/signup', async (req, res) => {
 
     await newUser.save();
     // console.log(newUser);
+
+    //saving for chatModel also
+    const newUserChatModel = new userChatModel({
+      name: req.body.name,
+      email: req.body.email,
+    })
+    await newUserChatModel.save();
 
     res.status(200).json(newUser);
     // res.send(newUser);

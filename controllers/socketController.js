@@ -1,7 +1,6 @@
 const clients = {};
-const { json } = require('express');
-const User = require('../models/user_models');
-
+// const User = require('../models/user_models');
+const userChatModel = require('../models/chat_model')
 
 module.exports = (io) => {
   io.on('connection', (socket) => {
@@ -27,7 +26,7 @@ module.exports = (io) => {
 
 async function addMessage(senderEmail, targetEmail, message) {
   try {
-    const sender = await User.findOne({ email: senderEmail });
+    const sender = await userChatModel.findOne({ email: senderEmail });
     if (!sender) {
       throw new Error('Sender not found in database');
     }
@@ -62,7 +61,7 @@ async function addMessage(senderEmail, targetEmail, message) {
     
     
     
-    const receiver = await User.findOne({email: targetEmail});
+    const receiver = await userChatModel.findOne({email: targetEmail});
     if(!receiver){
       throw new Error('receiver not found in database');
     }
