@@ -6,7 +6,7 @@ const User = require('../models/user_models');
 module.exports = (io) => {
   io.on('connection', (socket) => {
     console.log("Connected to Socket.IO");
-    console.log(socket.id + " has joined");
+    // console.log(socket.id + " has joined");
 
     socket.on('signin', (senderEmail) => {
       console.log(senderEmail);
@@ -33,46 +33,27 @@ async function addMessage(senderEmail, targetEmail, message) {
     }
 
     const targetChatInSenderDatabase = sender.chats.find(chat => chat.targetEmail === targetEmail);
-    const msgObject = {
-      type:'sentMsg',
-      text:message
-    }
     if (targetChatInSenderDatabase) {
       //if the email id of the target is not present in the user's chat database
-      targetChatInSenderDatabase.messages.push(...msgObject);
+      targetChatInSenderDatabase.messages.push({
+        type:'sentMsg',
+        text:message
+      });
     } else {
       //if the email id of the target is present in the user's chat database
       sender.chats.push({
         targetEmail: targetEmail,
-        messages: [...msgObject],
+        messages: [{
+          type:'sentMsg',
+          text:message
+        }],
       });
     }
 
     await sender.save();//saved msg for sender
     console.log('Message added for sender successfully');
 
-    //now we also have to save the msg for the target's chat database
-    // const target = await User.findOne({email: targetEmail});
-    // if(!target){
-    //   throw new Error('Target not found');
-    // }
-    // const senderChatForTargetDatabase = target.chats.find(chat=> chat.targetEmail === senderEmail);
-    // if(senderChatForTargetDatabase){
-    //   senderChatForTargetDatabase.messages.push({
-    //     type:'receivedMsg',
-    //     text: message
-    //   });
-    // }else{
-    //   target.chats.push({
-    //     targetEmail: senderEmail,
-    //     messages:[{
-    //       type:'receivedMsg',
-    //       text:message,
-    //     }],
-    //   })
-    // }
-    // await target.save();//saved msg for target also
-    // console.log('message added for target successfully')
+
   } catch (error) {
     console.error('Error adding message:', error.message);
   }
