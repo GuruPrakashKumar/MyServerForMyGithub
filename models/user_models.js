@@ -12,9 +12,9 @@ const newSchema = new Schema({
   chats: [
     {
       targetEmail: String,
-      messages:[
-         String
-      ]
+      messages:[{
+        String
+      }]
 
     },
   ],

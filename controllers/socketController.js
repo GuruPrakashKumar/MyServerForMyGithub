@@ -36,14 +36,15 @@ async function addMessage(senderEmail, targetEmail, message) {
     if (targetChatInSenderDatabase) {
       //if the email id of the target is present in the user's chat database
       targetChatInSenderDatabase.messages.push(
-        message
+        {message}
       );
     } else {
       //if the email id of the target is not present in the user's chat database
       sender.chats.push({
         targetEmail: targetEmail,
-        messages: [
+        messages: [{
           message
+        }
         ],
       });
     }
