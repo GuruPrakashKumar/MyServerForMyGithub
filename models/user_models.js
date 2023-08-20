@@ -9,16 +9,13 @@ const newSchema = new Schema({
   imgPath: String,
   likedPosts: [Schema.Types.ObjectId],
   dislikedPosts: [Schema.Types.ObjectId],
-  chats: [
-    {_id:false},
+  chats: [,
     {
       targetEmail: String,
-      messages:[{_id:false},{
-        type: String,
-      },
-      {text:String}
-    ]
-
+      messages: [
+        { type: String },
+        { text: String }
+      ]
     },
   ],
 },
