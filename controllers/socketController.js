@@ -40,6 +40,11 @@ async function addMessage(senderEmail, targetEmail, message) {
         text: message,
         type: 'sentMsg'
       });
+
+      // Mark the sender document as modified
+      sender.markModified('chats');
+
+      
       await sender.save(); // Saved message for sender
       console.log('entered in true part of if else')
       console.log(sender.chats[targetChatIndex].messages)
