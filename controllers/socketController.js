@@ -40,6 +40,7 @@ async function addMessage(senderEmail, targetEmail, message) {
         text: message,
         type: 'sentMsg'
       });
+      console.log('entered in true part of if else')
     } else {
       // If the target chat doesn't exist in the user's chats
       sender.chats.push({
