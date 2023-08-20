@@ -35,7 +35,7 @@ async function addMessage(senderEmail, targetEmail, message) {
     const targetChatInSenderDatabase = sender.chats.find(chat => chat.targetEmail === targetEmail);
     if (targetChatInSenderDatabase) {
       //if the email id of the target is present in the user's chat database
-      targetChatInSenderDatabase.messages.push({
+      targetChatInSenderDatabase.chats.messages.push({
         text: message,
         type: 'sentMsg'
     });
