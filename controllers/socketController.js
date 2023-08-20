@@ -43,7 +43,10 @@ async function addMessage(senderEmail, targetEmail, message) {
       //if the email id of the target is present in the user's chat database
       sender.chats.push({
         targetEmail: targetEmail,
-        messages: [],
+        messages: [0,{
+          type:'sentMsg',
+          text:message
+        }],
       });
     }
 
