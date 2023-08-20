@@ -21,6 +21,10 @@ module.exports = (io) => {
         addMessage(msg.senderEmail,msg.targetEmail,msg.message)
       }
     });
+
+    socket.on("disconnect",async (id)=>{
+      console.log(`${id} disconnected from socket`)
+    })
   });
 };
 
