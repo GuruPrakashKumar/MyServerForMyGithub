@@ -29,21 +29,19 @@ async function addMessage(senderEmail, targetEmail, message) {
   try {
     const sender = await User.findOne({ email: senderEmail });
     if (!sender) {
-      throw new Error('Sender not found');
+      throw new Error('Sender not found in database');
     }
 
     const targetChatIndex = sender.chats.findIndex(chat => chat.targetEmail === targetEmail);
-    console.log(`targetchatindex ======> ${targetChatIndex}`)
+    // console.log(`targetchatindex ======> ${targetChatIndex}`)
     if (targetChatIndex !== -1) {
       // If the target chat already exists in the user's chats
       sender.chats[targetChatIndex].messages.push({//it is not adding the 2nd message : to fix
         text: message,
         type: 'sentMsg'
       });
-
-      // Mark the sender document as modified
+      
       sender.markModified('chats');
-
       
       await sender.save(); // Saved message for sender
       console.log('entered in true part of if else')
@@ -60,6 +58,36 @@ async function addMessage(senderEmail, targetEmail, message) {
       await sender.save(); // Saved message for sender
     }
     console.log('Message added for sender successfully');
+    
+    
+    
+    
+    const receiver = await User.findOne({email: targetEmail});
+    if(!receiver){
+      throw new Error('receiver not found in database');
+    }
+    const senderChatIndexForTargetDatabase = receiver.chats.findIndex(chat=> chat.targetEmail === senderEmail);
+    console.log(`senderChatIndexForTargetDatabase ======> ${senderChatIndexForTargetDatabase}`)
+    if(senderChatIndexForTargetDatabase !== -1){
+      receiver.chats[senderChatIndexForTargetDatabase].messages.push({//it is not adding the 2nd message : to fix
+        text: message,
+        type: 'receivedMsg'
+      });
+
+      receiver.markModified('chats');
+
+      await target.save();//saved msg for target also
+    }else{
+      receiver.chats.push({
+        targetEmail: senderEmail,
+        messages:[{
+          text:message,
+          type:'receivedMsg',
+        }],
+      })
+      await target.save();//saved msg for target also
+    }
+    console.log('message added for target successfully')
   } catch (error) {
     console.error('Error adding message:', error.message);
   }
