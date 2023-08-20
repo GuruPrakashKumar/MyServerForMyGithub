@@ -32,15 +32,16 @@ async function addMessage(senderEmail, targetEmail, message) {
       throw new Error('Sender not found');
     }
 
-    const targetChatInSenderDatabase = sender.chats.find(chat => chat.targetEmail == targetEmail);
-    if (targetChatInSenderDatabase) {
-      //if the email id of the target is present in the user's chat database
-      targetChatInSenderDatabase.messages.push({
+    const targetChatIndex = sender.chats.findIndex(chat => chat.targetEmail === targetEmail);
+    console.log(`targetchatindex ======> ${targetChatIndex}`)
+    if (targetChatIndex !== -1) {
+      // If the target chat already exists in the user's chats
+      sender.chats[targetChatIndex].messages.push({
         text: message,
         type: 'sentMsg'
-    });
+      });
     } else {
-      //if the email id of the target is not present in the user's chat database
+      // If the target chat doesn't exist in the user's chats
       sender.chats.push({
         targetEmail: targetEmail,
         messages: [{
@@ -50,11 +51,10 @@ async function addMessage(senderEmail, targetEmail, message) {
       });
     }
 
-    await sender.save();//saved msg for sender
+    await sender.save(); // Saved message for sender
     console.log('Message added for sender successfully');
-
-
   } catch (error) {
     console.error('Error adding message:', error.message);
   }
 }
+
