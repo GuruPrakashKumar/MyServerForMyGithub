@@ -40,6 +40,7 @@ async function addMessage(senderEmail, targetEmail, message) {
         text: message,
         type: 'sentMsg'
       });
+      await sender.save(); // Saved message for sender
       console.log('entered in true part of if else')
       console.log(sender.chats[targetChatIndex].messages)
     } else {
@@ -51,8 +52,8 @@ async function addMessage(senderEmail, targetEmail, message) {
           type: 'sentMsg'
         }],
       });
+      await sender.save(); // Saved message for sender
     }
-    await sender.save(); // Saved message for sender
     console.log('Message added for sender successfully');
   } catch (error) {
     console.error('Error adding message:', error.message);
