@@ -10,11 +10,11 @@ const newSchema = new Schema({
   likedPosts: [Schema.Types.ObjectId],
   dislikedPosts: [Schema.Types.ObjectId],
   chats: [
+    {_id:false},
     {
       targetEmail: String,
-      messages:[{
-        
-        text: String
+      messages:[{_id:false},{
+        text: String,
       }]
 
     },
