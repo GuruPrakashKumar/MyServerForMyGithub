@@ -45,10 +45,6 @@ async function addMessage(senderEmail, targetEmail, message) {
         targetEmail: targetEmail,
         messages: [],
       });
-      sender.chats.messages.push({
-        type:'sentMsg',
-        text:message
-      })
     }
 
     await sender.save();//saved msg for sender
