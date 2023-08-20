@@ -32,7 +32,7 @@ async function addMessage(senderEmail, targetEmail, message) {
       throw new Error('Sender not found');
     }
 
-    const targetChatInSenderDatabase = sender.chats.find(chat => chat.targetEmail === targetEmail);
+    const targetChatInSenderDatabase = sender.chats.find(chat => chat.targetEmail == targetEmail);
     if (targetChatInSenderDatabase) {
       //if the email id of the target is present in the user's chat database
       targetChatInSenderDatabase.messages.push({
