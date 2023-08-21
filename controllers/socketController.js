@@ -1,6 +1,9 @@
 const clients = {};
 // const User = require('../models/user_models');
 const userChatModel = require('../models/chat_model')
+const userSocketModel = require('../models/socket_model')
+
+
 
 module.exports = (io) => {
   io.on('connection', (socket) => {
@@ -22,9 +25,9 @@ module.exports = (io) => {
       }
     });
 
-    socket.on("disconnect",async (id)=>{
-      console.log(`${id} disconnected from socket`)
-    })
+    // socket.on("disconnect",async (id)=>{
+    //   console.log(`${id} disconnected from socket`)
+    // })
   });
 };
 
