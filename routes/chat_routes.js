@@ -3,7 +3,7 @@ const router = express.Router();
 const authRoutes = require('./auth_routes'); // Assuming this is your auth middleware
 const userChatModel = require('../models/chat_model'); // Import the chat model
 
-router.post('/getChatHistory', authRoutes.verifyToken, async (req, resp) => {
+router.get('/getChatHistory', authRoutes.verifyToken, async (req, resp) => {
   try {
     const userChat = await userChatModel.findOne({
       email: req.authData.user.email,
