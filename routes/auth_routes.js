@@ -50,6 +50,7 @@ router.post('/signup', async (req, res) => {
     const newUserChatModel = new userChatModel({
       name: req.body.name,
       email: req.body.email,
+      imgPath: req.body.imgPath
     })
     await newUserChatModel.save();
 
