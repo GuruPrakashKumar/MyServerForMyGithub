@@ -3,7 +3,7 @@ const router = express.Router();
 const authRoutes = require('./auth_routes');
 const userChatModel = require('../models/chat_model');
 const User = require('../models/user_models');
-router.get('/getAllTargetEmails',authRoutes.verifyToken,async (req,resp)=>{
+router.get('/getAllTargetEmails',authRoutes.verifyToken,async (req,resp)=>{// for fetching messages
   try {
     const userChat = await userChatModel.findOne({
       email:req.authData.user.email
@@ -18,7 +18,7 @@ router.get('/getAllTargetEmails',authRoutes.verifyToken,async (req,resp)=>{
   }
 })
 
-router.get('/getBasicDetails', authRoutes.verifyToken, async (req, resp) => {
+router.get('/getBasicDetails', authRoutes.verifyToken, async (req, resp) => {//for updating the profile photos and names in the chat
   try {
     const targetEmails = req.query.targetEmails.split(',');
 
