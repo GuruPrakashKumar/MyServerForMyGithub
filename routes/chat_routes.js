@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const authRoutes = require('./auth_routes');
 const userChatModel = require('../models/chat_model');
-
+const User = require('../models/user_models');
 router.get('/getAllTargetEmails',authRoutes.verifyToken,async (req,resp)=>{
   try {
     const userChat = await userChatModel.findOne({
@@ -20,11 +20,11 @@ router.get('/getAllTargetEmails',authRoutes.verifyToken,async (req,resp)=>{
 
 router.get('/getBasicDetails', authRoutes.verifyToken, async (req, resp) => {
   try {
-    const targetEmails = req.query.targetEmails;
+    const targetEmails = req.query.targetEmails.split(',');
 
     const basicDetails = [];
     for (const targetEmail of targetEmails) {
-      const targetUser = await UserModel.findOne({ email: targetEmail });
+      const targetUser = await User.findOne({ email: targetEmail });
       if (targetUser) {
         basicDetails.push({
           email: targetEmail,
