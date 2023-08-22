@@ -12,7 +12,7 @@ router.get('/getAllTargetEmails',authRoutes.verifyToken,async (req,resp)=>{
       return resp.status(404).json({ message: 'User chat history not found' });
     }
     const targetEmails = userChat.chats.map(chat => chat.targetEmail);
-    
+    resp.status(200).json(targetEmails);
   } catch (error) {
     resp.status(500).json({message: 'server error'})
   }
