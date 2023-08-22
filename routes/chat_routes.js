@@ -18,6 +18,28 @@ router.get('/getAllTargetEmails',authRoutes.verifyToken,async (req,resp)=>{
   }
 })
 
+router.get('/getBasicDetails', authRoutes.verifyToken, async (req, resp) => {
+  try {
+    const targetEmails = req.query.targetEmails;
+
+    const basicDetails = [];
+    for (const targetEmail of targetEmails) {
+      const targetUser = await UserModel.findOne({ email: targetEmail });
+      if (targetUser) {
+        basicDetails.push({
+          email: targetEmail,
+          name: targetUser.name,
+          imgPath: targetUser.imgPath,
+        });
+      }
+    }
+
+    resp.status(200).json(basicDetails);
+  } catch (error) {
+    resp.status(500).json({ message: 'server error' });
+  }
+});
+
 router.post('/getChatHistory', authRoutes.verifyToken, async (req, resp) => {
   try {
     const userChat = await userChatModel.findOne({
