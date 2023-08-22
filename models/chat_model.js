@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const userChatSchema = new Schema({
     name: String,
     email: String,
+    imgPath: String,
     chats: [,
       {
         targetEmail: String,

@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
-const authRoutes = require('./auth_routes'); // Assuming this is your auth middleware
-const userChatModel = require('../models/chat_model'); // Import the chat model
+const authRoutes = require('./auth_routes');
+const userChatModel = require('../models/chat_model');
 
 router.get('/getAllTargetEmails',authRoutes.verifyToken,async (req,resp)=>{
   try {
@@ -28,11 +28,11 @@ router.post('/getChatHistory', authRoutes.verifyToken, async (req, resp) => {
       return resp.status(404).json({ message: 'User chat history not found' });
     }
 
-    const targetEmail = req.body.targetEmail; // Assuming targetEmail is sent in the request body
+    const targetEmail = req.body.targetEmail; 
     
     const targetChat = userChat.chats.find(chat => chat.targetEmail === targetEmail);
     if (targetChat) {
-      // Found the chat history for the target user
+      
       resp.status(200).json(targetChat.messages);
     } else {
       resp.status(404).json({ message: 'Chat history for target user not found' });

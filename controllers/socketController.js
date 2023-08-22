@@ -42,7 +42,7 @@ async function addMessage(senderEmail, targetEmail, message) {
     // console.log(`targetchatindex ======> ${targetChatIndex}`)
     if (targetChatIndex !== -1) {
       // If the target chat already exists in the user's chats
-      sender.chats[targetChatIndex].messages.push({//it is not adding the 2nd message : to fix
+      sender.chats[targetChatIndex].messages.push({
         text: message,
         type: 'sentMsg'
       });
