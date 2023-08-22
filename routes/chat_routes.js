@@ -2,8 +2,8 @@ const express = require('express');
 const router = express.Router();
 const authRoutes = require('./auth_routes');
 const userChatModel = require('../models/chat_model');
-
-router.get('/getAllTargetEmails',authRoutes.verifyToken,async (req,resp)=>{
+const User = require('../models/user_models');
+router.get('/getAllTargetEmails',authRoutes.verifyToken,async (req,resp)=>{// for fetching messages
   try {
     const userChat = await userChatModel.findOne({
       email:req.authData.user.email
@@ -17,6 +17,28 @@ router.get('/getAllTargetEmails',authRoutes.verifyToken,async (req,resp)=>{
     resp.status(500).json({message: 'server error'})
   }
 })
+
+router.get('/getBasicDetails', authRoutes.verifyToken, async (req, resp) => {//for updating the profile photos and names in the chat
+  try {
+    const targetEmails = req.query.targetEmails.split(',');
+
+    const basicDetails = [];
+    for (const targetEmail of targetEmails) {
+      const targetUser = await User.findOne({ email: targetEmail });
+      if (targetUser) {
+        basicDetails.push({
+          email: targetEmail,
+          name: targetUser.name,
+          imgPath: targetUser.imgPath,
+        });
+      }
+    }
+
+    resp.status(200).json(basicDetails);
+  } catch (error) {
+    resp.status(500).json({ message: 'server error' });
+  }
+});
 
 router.post('/getChatHistory', authRoutes.verifyToken, async (req, resp) => {
   try {
