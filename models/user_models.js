@@ -9,6 +9,10 @@ const newSchema = new Schema({
   imgPath: String,
   likedPosts: [Schema.Types.ObjectId],
   dislikedPosts: [Schema.Types.ObjectId],
+  circles: [{
+    _id:Schema.Types.ObjectId, //this is refers to the circle ids from circles collection
+    name:String,
+  }]
   
 },
   { versionKey: false }
