@@ -75,7 +75,7 @@ async function addMessage(senderEmail, targetEmail, message) {
     const senderChatIndexForTargetDatabase = receiver.chats.findIndex(chat=> chat.targetEmail === senderEmail);
     console.log(`senderChatIndexForTargetDatabase ======> ${senderChatIndexForTargetDatabase}`)
     if(senderChatIndexForTargetDatabase !== -1){
-      receiver.chats[senderChatIndexForTargetDatabase].messages.push({//it is not adding the 2nd message : to fix
+      receiver.chats[senderChatIndexForTargetDatabase].messages.push({
         text: message,
         type: 'receivedMsg'
       });

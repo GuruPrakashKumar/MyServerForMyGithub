@@ -90,10 +90,6 @@ router.get('/getAllBlogs',  authRoutes.verifyToken, async (req, res) => {
   try {
     const allBlogs = await BlogModel.find({}, { _id:1 ,name: 1, blog: 1, imgPath: 1, blogImagePath: 1,likes:1,dislikes:1});
     const user = await User.find({email:req.authData.user.email},{likedPosts:1,dislikedPosts:1})
-    // console.log('allblogs: ')
-    // console.log(allBlogs)
-    // console.log('user: ')
-    // console.log(user)
     var blogsWithLikeStatus = allBlogs.map(blog => {
       const isLiked = user[0].likedPosts.includes(blog._id);
       const isDisliked = user[0].dislikedPosts.includes(blog._id);
