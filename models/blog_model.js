@@ -7,6 +7,7 @@ const BlogModel = new Schema({
     blog:String,
     imgPath:String,//for profile photo
     blogImagePath:String,//for blog image if any
+    datePublished:String,
     likes:{
         type:Number,
         default:0,

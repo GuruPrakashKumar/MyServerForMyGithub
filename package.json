@@ -19,6 +19,8 @@
     "express-fileupload": "^1.4.0",
     "jsonwebtoken": "^9.0.1",
     "mongoose": "^7.4.2",
+    "nodemailer": "^6.9.6",
+    "otp-generator": "^4.0.1",
     "socket.io": "^4.7.2"
   }
 }

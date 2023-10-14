@@ -12,7 +12,7 @@ const cloudinary = require('./cloudinary_config')
 router.post('/likeBlog',  authRoutes.verifyToken, async (req, res) => {
   try {
     const blogId = req.body.blogId;
-    const likeStatus = req.body.likeStatus;
+    // const likeStatus = req.body.likeStatus;
 
     if (!blogId) {
       return res.status(400).json({ message: 'Blog ID is required' });
@@ -23,7 +23,7 @@ router.post('/likeBlog',  authRoutes.verifyToken, async (req, res) => {
       return res.status(404).json({ message: 'Blog not found' });
     }
 
-    const userLiked = await User.findOne({ email: req.authData.user.email });
+    const userLiked = await User.findOne({ email: req.authData.email });
     if (!userLiked) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -59,7 +59,7 @@ router.post('/dislikeBlog',  authRoutes.verifyToken, async (req, res) => {
     if (!disLikedBlog) {
       return res.status(404).json({ message: 'Blog not found' });
     }
-    const userDisliked = await User.findOne({ email: req.authData.user.email });
+    const userDisliked = await User.findOne({ email: req.authData.email });
     if (!userDisliked) {
       return res.status(404).json({ message: 'User not found' });
     }
@@ -89,7 +89,7 @@ router.post('/dislikeBlog',  authRoutes.verifyToken, async (req, res) => {
 router.get('/getAllBlogs',  authRoutes.verifyToken, async (req, res) => {
   try {
     const allBlogs = await BlogModel.find({}, { _id:1 ,name: 1, blog: 1, imgPath: 1, blogImagePath: 1,likes:1,dislikes:1});
-    const user = await User.find({email:req.authData.user.email},{likedPosts:1,dislikedPosts:1})
+    const user = await User.find({email:req.authData.email},{likedPosts:1,dislikedPosts:1})
     var blogsWithLikeStatus = allBlogs.map(blog => {
       const isLiked = user[0].likedPosts.includes(blog._id);
       const isDisliked = user[0].dislikedPosts.includes(blog._id);
@@ -124,27 +124,30 @@ router.post('/blogs', authRoutes.verifyToken, async (req, res) => {//for uploadi
           console.error(err);
           return res.status(500).json(err);
         }
-
+        const user = await User.findOne({email:req.authData.email})
         const blogModel = new BlogModel({
-          email: req.authData.user.email,
-          name: req.authData.user.name,
+          email: req.authData.email,
+          name: user.name,
           blog: req.body.blog,
-          imgPath: req.authData.user.imgPath,
+          imgPath: user.imgPath,
           blogImagePath: resp.url,
+          datePublished: new Date(Date.now()).toLocaleDateString(undefined, { day: '2-digit', month: 'short', year: 'numeric' }),
         });
-
+        
         await blogModel.save();
         console.log(blogModel);
         res.status(200).json(blogModel);
       });
     } else {
       // No image provided, saving only blog content
+      const user = await User.findOne({email:req.authData.email})
       const blogModel = new BlogModel({
-        email: req.authData.user.email,
-        name: req.authData.user.name,
+        email: req.authData.email,
+        name: user.name,
         blog: req.body.blog,
-        imgPath: req.authData.user.imgPath,
-        blogImagePath: "null"
+        imgPath: user.imgPath,
+        blogImagePath: "null",
+        datePublished: new Date(Date.now()).toLocaleDateString(undefined, { day: '2-digit', month: 'short', year: 'numeric' }),
       });
 
       await blogModel.save();

@@ -21,7 +21,7 @@ module.exports = {cloudinary};
 router.get('/getProfilePhoto',  authRoutes.verifyToken, async (req, res) => {
   try {
     const user = await User.findOne({
-      email: req.authData.user.email,
+      email: req.authData.email,
     })
     if (user) {//also have to handle if user has not uploaded any profile photo
 
@@ -43,9 +43,10 @@ router.post('/imgupload',  authRoutes.verifyToken, async (req, res) => {//this i
   try {
     // const emailId = req.body.email; 
     // console.log(req)
-    const emailId = req.authData.user.email;
+    const emailId = req.authData.email;
     const file = req.files.photo;
-    const previousProfilePhotoPath = req.authData.user.imgPath;
+    const savedUser = await User.findOne({email:emailId})
+    const previousProfilePhotoPath = savedUser.imgPath
 
     cloudinary.uploader.upload(file.tempFilePath, {
       transformation: [
@@ -59,7 +60,7 @@ router.post('/imgupload',  authRoutes.verifyToken, async (req, res) => {//this i
 
       const imagePath = resp.url;
 
-      await User.updateOne({ email: emailId }, { $set: { imgPath: imagePath } }, { upsert: true });
+      await savedUser.updateOne({ $set: { imgPath: imagePath }});
       await BlogModel.updateMany({ email: emailId }, { $set: { imgPath: imagePath } },);
 
       if (previousProfilePhotoPath != DEFAULT_PROFILE_IMAGE) {
