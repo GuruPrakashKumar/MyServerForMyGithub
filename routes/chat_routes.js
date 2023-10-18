@@ -6,7 +6,7 @@ const User = require('../models/user_models');
 router.get('/getAllTargetEmails',authRoutes.verifyToken,async (req,resp)=>{// for fetching messages
   try {
     const userChat = await userChatModel.findOne({
-      email:req.authData.user.email
+      email:req.authData.email
     })
     if (!userChat) {
       return resp.status(404).json({ message: 'User chat history not found' });
@@ -43,7 +43,7 @@ router.get('/getBasicDetails', authRoutes.verifyToken, async (req, resp) => {//f
 router.post('/getChatHistory', authRoutes.verifyToken, async (req, resp) => {
   try {
     const userChat = await userChatModel.findOne({
-      email: req.authData.user.email,
+      email: req.authData.email,
     });
     
     if (!userChat) {
