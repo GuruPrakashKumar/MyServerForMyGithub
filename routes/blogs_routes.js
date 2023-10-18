@@ -88,7 +88,7 @@ router.post('/dislikeBlog',  authRoutes.verifyToken, async (req, res) => {
 // Get All Blogs Route
 router.get('/getAllBlogs',  authRoutes.verifyToken, async (req, res) => {
   try {
-    const allBlogs = await BlogModel.find({}, { _id:1 ,name: 1, blog: 1, imgPath: 1, blogImagePath: 1,likes:1,dislikes:1});
+    const allBlogs = await BlogModel.find({}, { _id:1 ,name: 1, blog: 1, imgPath: 1, blogImagePath: 1,likes:1,dislikes:1,datePublished: 1});
     const user = await User.find({email:req.authData.email},{likedPosts:1,dislikedPosts:1})
     var blogsWithLikeStatus = allBlogs.map(blog => {
       const isLiked = user[0].likedPosts.includes(blog._id);
@@ -111,7 +111,7 @@ router.get('/getAllBlogs',  authRoutes.verifyToken, async (req, res) => {
   }
 });
 
-router.post('/blogs', authRoutes.verifyToken, async (req, res) => {//for uploading blog
+router.post('/blog', authRoutes.verifyToken, async (req, res) => {//for uploading blog
   try {
     if (req.files) {//if user will provide image for the blog
       const file = req.files.image; // coming from frontend

@@ -16,14 +16,14 @@ function verifyToken(req, resp, next) {
     token = token.split(' ')[1];
     jwt.verify(token, jwtSecretKey, (err, authData) => {
       if (err) {
-        resp.status(401).send({ result: "token not valid" });
+        resp.status(401).send({ message: "You are Unauthorized" });//token not valid
       } else {
         req.authData = authData;
         next();
       }
     });
   } else {
-    resp.status(403).send({ result: "token not found. please add token" });
+    resp.status(403).send({ message: "Token not found" });
   }
 }
 async function emailSender(otp, email) {
@@ -88,7 +88,7 @@ router.post('/otpVerification', async (req, res) => {//email and otp required
         res.status(410).json({ message: "OTP has expired" })
       } else {
         await savedUser.updateOne({ $set: { verified: true, otp: null, timestamp: null } })
-        jwt.sign({ email: savedUser.email }, jwtSecretKey, { expiresIn: "300s" }, (err, token) => {
+        jwt.sign({ email: savedUser.email }, jwtSecretKey, { expiresIn: "300s" }, (err, token) => {//TODO: change this expire time
           if (err) {
             res.status(500).json({ message: "Internal Server Error" });
           }
@@ -117,7 +117,7 @@ router.post('/signup', verifyToken, async (req, res) => {//name and pass require
 
 
     //saving for chatModel also
-    const newUserChatModel = new userChatModel({
+    const newUserChatModel = new userChatModel({//TODO: see this
       name: req.body.name,
       email: req.body.email,
       imgPath: req.body.imgPath
