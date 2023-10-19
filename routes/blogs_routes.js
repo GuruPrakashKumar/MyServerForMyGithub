@@ -104,7 +104,7 @@ router.get('/getAllBlogs',  authRoutes.verifyToken, async (req, res) => {
     // console.log('blogs with like status: ')
     // console.log(blogsWithLikeStatus);
     // console.log('total response: ')
-    res.status(200).json(blogsWithLikeStatus);
+    res.status(200).json(blogsWithLikeStatus.reverse());
   } catch (err) {
     console.error(err);
     res.status(500).json(err);
