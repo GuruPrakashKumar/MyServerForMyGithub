@@ -57,7 +57,7 @@ router.post('/signUpInit', async (req, res) => {//email is required
     // User exists in database, update OTP and timestamp
     await existingUser.updateOne({ $set: { timestamp: timestamp, otp: otp } })
     // Sending OTP via email  //UNCOMMENT THESE LINES TO SEND THE OTP TO THE RESPECTIVE EMAIL
-    // await emailSender(otp,email)
+    await emailSender(otp,email)
     res.status(200).json({ message: "OTP sent to the user's email." })
 
   } else {
@@ -69,7 +69,7 @@ router.post('/signUpInit', async (req, res) => {//email is required
     })
     await newUser.save()
     // Sending OTP via email  //UNCOMMENT THESE LINES TO SEND THE OTP TO THE RESPECTIVE EMAIL
-    // await emailSender(otp,email)
+    await emailSender(otp,email)
     res.status(200).json({ message: "OTP sent to the user's email." })
 
   }

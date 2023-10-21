@@ -4,12 +4,32 @@ const router = express.Router();
 const BlogModel = require('../models/blog_model');
 const User = require('../models/user_models');
 // const {verifyToken} = require('./auth_routes');
-const authRoutes = require('./auth_routes'); 
+const authRoutes = require('./auth_routes');
 const cloudinary = require('./cloudinary_config')
+const axios = require('axios')
 
+router.post('/correct-grammar', authRoutes.verifyToken, async (req, res) => {
+  const inputText = req.body.blog;
+  const inputTokens = inputText.split(' ').length;//gpt-3.5-turbo-instruct
+  const response = await axios.post('https://api.openai.com/v1/engines/text-davinci-002/completions', {
+    prompt: `Correct the following paragraph of sentences: "${inputText}"`,
+    max_tokens: inputTokens+100,
+    temperature: 0.3,
+  }, {
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${process.env.OPEN_API_KEY}`,
+      // 'Authorization': `Bearer ${req.body.apiKey}`,
+    },
+  },)
+  const correctedText = response.data.choices[0].text;
+  if (correctedText) {
+    res.status(200).json({ message: correctedText });
+  }
+})
 
 // Like Blog Route
-router.post('/likeBlog',  authRoutes.verifyToken, async (req, res) => {
+router.post('/likeBlog', authRoutes.verifyToken, async (req, res) => {
   try {
     const blogId = req.body.blogId;
     // const likeStatus = req.body.likeStatus;
@@ -49,7 +69,7 @@ router.post('/likeBlog',  authRoutes.verifyToken, async (req, res) => {
 });
 
 // Dislike Blog Route
-router.post('/dislikeBlog',  authRoutes.verifyToken, async (req, res) => {
+router.post('/dislikeBlog', authRoutes.verifyToken, async (req, res) => {
   try {
     const blogId = req.body.blogId;
     if (!blogId) {
@@ -86,21 +106,21 @@ router.post('/dislikeBlog',  authRoutes.verifyToken, async (req, res) => {
 });
 
 // Get All Blogs Route
-router.get('/getAllBlogs',  authRoutes.verifyToken, async (req, res) => {
+router.get('/getAllBlogs', authRoutes.verifyToken, async (req, res) => {
   try {
-    const allBlogs = await BlogModel.find({}, { _id:1 ,name: 1, blog: 1, imgPath: 1, blogImagePath: 1,likes:1,dislikes:1,datePublished: 1});
-    const user = await User.find({email:req.authData.email},{likedPosts:1,dislikedPosts:1})
+    const allBlogs = await BlogModel.find({}, { _id: 1, name: 1, blog: 1, imgPath: 1, blogImagePath: 1, likes: 1, dislikes: 1, datePublished: 1 });
+    const user = await User.find({ email: req.authData.email }, { likedPosts: 1, dislikedPosts: 1 })
     var blogsWithLikeStatus = allBlogs.map(blog => {
       const isLiked = user[0].likedPosts.includes(blog._id);
       const isDisliked = user[0].dislikedPosts.includes(blog._id);
-      
+
       return {
         ...blog._doc,//note for me: it adds isLiked and isDisliked in the objects of the blogs
         isLiked,
         isDisliked
       };
     });
-    
+
     // console.log('blogs with like status: ')
     // console.log(blogsWithLikeStatus);
     // console.log('total response: ')
@@ -124,7 +144,7 @@ router.post('/blog', authRoutes.verifyToken, async (req, res) => {//for uploadin
           console.error(err);
           return res.status(500).json(err);
         }
-        const user = await User.findOne({email:req.authData.email})
+        const user = await User.findOne({ email: req.authData.email })
         const blogModel = new BlogModel({
           email: req.authData.email,
           name: user.name,
@@ -133,14 +153,14 @@ router.post('/blog', authRoutes.verifyToken, async (req, res) => {//for uploadin
           blogImagePath: resp.url,
           datePublished: new Date(Date.now()).toLocaleDateString(undefined, { day: '2-digit', month: 'short', year: 'numeric' }),
         });
-        
+
         await blogModel.save();
         console.log(blogModel);
         res.status(200).json(blogModel);
       });
     } else {
       // No image provided, saving only blog content
-      const user = await User.findOne({email:req.authData.email})
+      const user = await User.findOne({ email: req.authData.email })
       const blogModel = new BlogModel({
         email: req.authData.email,
         name: user.name,
