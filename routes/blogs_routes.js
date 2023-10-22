@@ -13,7 +13,7 @@ router.post('/correct-grammar', authRoutes.verifyToken, async (req, res) => {
   const inputTokens = inputText.split(' ').length;//gpt-3.5-turbo-instruct
   const response = await axios.post('https://api.openai.com/v1/engines/text-davinci-002/completions', {
     prompt: `Correct the following paragraph of sentences: "${inputText}"`,
-    max_tokens: inputTokens+100,
+    max_tokens: inputTokens + 100,
     temperature: 0.3,
   }, {
     headers: {
@@ -108,7 +108,24 @@ router.post('/dislikeBlog', authRoutes.verifyToken, async (req, res) => {
 // Get All Blogs Route
 router.get('/getAllBlogs', authRoutes.verifyToken, async (req, res) => {
   try {
-    const allBlogs = await BlogModel.find({}, { _id: 1, name: 1, blog: 1, imgPath: 1, blogImagePath: 1, likes: 1, dislikes: 1, datePublished: 1 });
+    const page = parseInt(req.query.page) || 1;
+    const pageSize = parseInt(req.query.pageSize) || 10;
+    const skip = (page - 1) * pageSize;
+
+    const totalBlogCount = await BlogModel.countDocuments();
+    const totalPages = Math.ceil(totalBlogCount / pageSize);
+    const allBlogs = await BlogModel.find({}, {
+      _id: 1,
+      name: 1,
+      blog: 1,
+      imgPath: 1,
+      blogImagePath: 1,
+      likes: 1, dislikes: 1,
+      datePublished: 1
+    })
+      .sort({datePublished: -1})
+      .skip(skip)
+      .limit(pageSize);
     const user = await User.find({ email: req.authData.email }, { likedPosts: 1, dislikedPosts: 1 })
     var blogsWithLikeStatus = allBlogs.map(blog => {
       const isLiked = user[0].likedPosts.includes(blog._id);
@@ -120,11 +137,25 @@ router.get('/getAllBlogs', authRoutes.verifyToken, async (req, res) => {
         isDisliked
       };
     });
+    // const next = skip + limit < totalBlogCount;
+    const paginationInfo = {
+      totalBlogs: totalBlogCount,
+      totalPages,
+      currentPage: page,
+    };
+
+    // Prepare links to next and previous pages
+    if (page < totalPages) {
+      paginationInfo.next = { page: page + 1 };
+    }
+    if (page > 1) {
+      paginationInfo.previous = { page: page - 1 };
+    }
 
     // console.log('blogs with like status: ')
     // console.log(blogsWithLikeStatus);
     // console.log('total response: ')
-    res.status(200).json(blogsWithLikeStatus.reverse());
+    res.status(200).json({blogs: blogsWithLikeStatus, pagination: paginationInfo});
   } catch (err) {
     console.error(err);
     res.status(500).json(err);

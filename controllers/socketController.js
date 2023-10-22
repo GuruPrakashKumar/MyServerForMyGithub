@@ -8,19 +8,21 @@ const userSocketModel = require('../models/socket_model')
 module.exports = (io) => {
   io.on('connection', (socket) => {
     console.log("Connected to Socket.IO");
-    // console.log(socket.id + " has joined");
+    console.log(socket.id + " has joined");
 
     socket.on('signin', (senderEmail) => {
-      console.log(senderEmail);
-      clients[senderEmail] = socket;
+      console.log(`sender uid is ${senderEmail}`);
+      clients[senderEmail] = socket.id;
       console.log(clients);
+      socket.join(socket.id)
+      //save uid to database
     });
 
     socket.on("message", (msg) => {
       console.log(msg);
       const targetEmail = msg.targetEmail;
       if (clients[targetEmail]){
-        clients[targetEmail].emit("message", msg);
+        socket.to(clients[targetEmail]).emit("message", msg);
         addMessage(msg.senderEmail,msg.targetEmail,msg.message)
       }
     });
