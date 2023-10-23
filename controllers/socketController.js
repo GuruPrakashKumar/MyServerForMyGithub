@@ -12,8 +12,8 @@ module.exports = (io) => {
 
     socket.on('signin', (senderEmail) => {
       console.log(`sender uid is ${senderEmail}`);
-      clients[senderEmail] = socket.id;
-      console.log(clients);
+      clients[senderEmail] = senderEmail;
+      console.log(`clients is ${clients}`);
       socket.join(socket.id)
       //save uid to database
     });
@@ -22,7 +22,7 @@ module.exports = (io) => {
       console.log(msg);
       const targetEmail = msg.targetEmail;
       if (clients[targetEmail]){
-        socket.to(clients[targetEmail]).emit("message", msg);
+        io.to(clients[targetEmail]).emit("message", msg);
         addMessage(msg.senderEmail,msg.targetEmail,msg.message)
       }
     });
