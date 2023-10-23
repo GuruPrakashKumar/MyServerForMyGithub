@@ -11,19 +11,20 @@ module.exports = (io) => {
     console.log(socket.id + " has joined");
 
     socket.on('signin', (senderEmail) => {
-      console.log(`sender uid is ${senderEmail}`);
-      clients[senderEmail] = senderEmail;
-      console.log(`clients is ${clients}`);
-      socket.join(socket.id)
+      // console.log(`sender uid is ${senderEmail}`);
+      // clients[senderEmail] = senderEmail;
+      // console.log(`clients is ${clients}`);
+      socket.join(senderEmail)
       //save uid to database
     });
 
     socket.on("message", (msg) => {
-      // console.log(msg);
+      console.log(`msg is ${msg}`);
       const targetEmail = msg.targetEmail;
       console.log(`target email is ${targetEmail}`)
 
-      if (clients[targetEmail]){
+      if (msg.targetEmail){
+        console.log('executing line 27')
         io.to(targetEmail).emit("message", msg);
         addMessage(msg.senderEmail,msg.targetEmail,msg.message)
       }
