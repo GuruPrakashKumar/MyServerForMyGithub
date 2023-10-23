@@ -19,6 +19,7 @@ module.exports = (io) => {
     });
 
     socket.on("message", (msg) => {
+      msg = JSON.stringify(msg);
       console.log(`msg is ${msg}`);
       const targetEmail = msg.targetEmail;
       console.log(`target email is ${targetEmail}`)
