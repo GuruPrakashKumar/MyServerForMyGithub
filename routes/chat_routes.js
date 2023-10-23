@@ -55,7 +55,7 @@ router.post('/getChatHistory', authRoutes.verifyToken, async (req, resp) => {
     const targetChat = userChat.chats.find(chat => chat.targetEmail === targetEmail);
     if (targetChat) {
       
-      resp.status(200).json(targetChat.messages);
+      resp.status(200).json(targetChat.messages.reverse());
     } else {
       resp.status(404).json({ message: 'Chat history for target user not found' });
     }

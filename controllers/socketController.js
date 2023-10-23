@@ -7,8 +7,8 @@ const userSocketModel = require('../models/socket_model')
 
 module.exports = (io) => {
   io.on('connection', (socket) => {
-    console.log("Connected to Socket.IO");
-    console.log(socket.id + " has joined");
+    // console.log("Connected to Socket.IO");
+    // console.log(socket.id + " has joined");
 
     socket.on('signin', (senderEmail) => {
       // console.log(`sender uid is ${senderEmail}`);
@@ -19,12 +19,12 @@ module.exports = (io) => {
     });
 
     socket.on("message", (msg) => {
-      console.log(`msg is ${msg}`);
+      // console.log(`msg is ${msg}`);
       const targetEmail = msg.targetEmail;
-      console.log(`target email is ${targetEmail}`)
+      // console.log(`target email is ${targetEmail}`)
 
       if (msg.targetEmail){
-        console.log('executing line 27')
+        // console.log('executing line 27')
         io.to(targetEmail).emit("message", msg);
         addMessage(msg.senderEmail,msg.targetEmail,msg.message)
       }
@@ -55,8 +55,8 @@ async function addMessage(senderEmail, targetEmail, message) {
       sender.markModified('chats');
       
       await sender.save(); // Saved message for sender
-      console.log('entered in true part of if else')
-      console.log(sender.chats[targetChatIndex].messages)
+      // console.log('entered in true part of if else')
+      // console.log(sender.chats[targetChatIndex].messages)
     } else {
       // If the target chat doesn't exist in the user's chats
       sender.chats.push({
