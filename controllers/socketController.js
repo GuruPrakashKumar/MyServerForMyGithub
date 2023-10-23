@@ -19,10 +19,12 @@ module.exports = (io) => {
     });
 
     socket.on("message", (msg) => {
-      console.log(msg);
+      // console.log(msg);
       const targetEmail = msg.targetEmail;
+      console.log(`target email is ${targetEmail}`)
+
       if (clients[targetEmail]){
-        io.to(clients[targetEmail]).emit("message", msg);
+        io.to(targetEmail).emit("message", msg);
         addMessage(msg.senderEmail,msg.targetEmail,msg.message)
       }
     });
