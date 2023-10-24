@@ -8,7 +8,7 @@ const otpGenerator = require("otp-generator");
 const nodemailer = require('nodemailer')
 const User = require('../models/user_models');
 const userChatModel = require('../models/chat_model')
-const DEFAULT_PROFILE_IMAGE = 'https://res.cloudinary.com/dvmjj1jwt/image/upload/v1691922615/default_img_ormosn.png'
+const DEFAULT_PROFILE_IMAGE = 'https://res.cloudinary.com/dvmjj1jwt/image/upload/v1698135020/default_dp.jpg'
 
 function verifyToken(req, resp, next) {
   let token = req.headers['authorization'];

@@ -3,6 +3,28 @@ const router = express.Router();
 const authRoutes = require('./auth_routes');
 const userChatModel = require('../models/chat_model');
 const User = require('../models/user_models');
+
+router.get('/suggested-users',authRoutes.verifyToken, async(req,res)=>{
+  const list = await userChatModel.find({},{name:1, email: 1, imgPath: 1})
+  res.status(200).json(list)
+})
+router.get('/search-user', authRoutes.verifyToken, async (req, res)=>{
+  if(req.query.email){
+    const list = await userChatModel.find({email: req.query.email},{name:1, email: 1, imgPath:1})
+    if(list){
+      res.status(200).json(list)
+    }else{
+      res.status(404).json({message: "No user Found"})
+    }
+  }else if(req.query.name){
+    const list = await userChatModel.find({name: req.query.name},{name:1, email: 1, imgPath:1})
+    if(list){
+      res.status(200).json(list)
+    }else{
+      res.status(404).json({message: "No user Found"})
+    }
+  }
+})
 router.get('/getAllTargetEmails',authRoutes.verifyToken,async (req,resp)=>{// for fetching messages
   try {
     const userChat = await userChatModel.findOne({
@@ -55,7 +77,7 @@ router.post('/getChatHistory', authRoutes.verifyToken, async (req, resp) => {
     const targetChat = userChat.chats.find(chat => chat.targetEmail === targetEmail);
     if (targetChat) {
       
-      resp.status(200).json(targetChat.messages.reverse());
+      resp.status(200).json(targetChat.messages.reverse().limit(30));
     } else {
       resp.status(404).json({ message: 'Chat history for target user not found' });
     }

@@ -7,7 +7,7 @@ const authRoutes = require('./auth_routes');
 const cloudinary = require('./cloudinary_config')
 
 
-const DEFAULT_PROFILE_IMAGE = 'https://res.cloudinary.com/dvmjj1jwt/image/upload/v1691922615/default_img_ormosn.png'
+const DEFAULT_PROFILE_IMAGE = 'https://res.cloudinary.com/dvmjj1jwt/image/upload/v1698135020/default_dp.jpg'
 const { extractPublicId } = require('cloudinary-build-url');//used in image uploading to delete previous profile pic from cloudinary
 
 
