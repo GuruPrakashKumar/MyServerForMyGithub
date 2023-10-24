@@ -119,8 +119,8 @@ router.post('/signup', verifyToken, async (req, res) => {//name and pass require
     //saving for chatModel also
     const newUserChatModel = new userChatModel({//TODO: see this
       name: req.body.name,
-      email: req.body.email,
-      imgPath: req.body.imgPath
+      email: newUser.email,
+      imgPath: DEFAULT_PROFILE_IMAGE
     })
     await newUserChatModel.save();
 

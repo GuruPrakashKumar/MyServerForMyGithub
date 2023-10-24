@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const User = require('../models/user_models'); //this returns a model of 'students' collection so that data can be set in this and posted.
 const BlogModel = require('../models/blog_model')
+const chatModel = require('../models/chat_model')
 // const {verifyToken} = require('./auth_routes');
 const authRoutes = require('./auth_routes'); 
 const cloudinary = require('./cloudinary_config')
@@ -62,6 +63,7 @@ router.post('/imgupload',  authRoutes.verifyToken, async (req, res) => {//this i
 
       await savedUser.updateOne({ $set: { imgPath: imagePath }});
       await BlogModel.updateMany({ email: emailId }, { $set: { imgPath: imagePath } },);
+      await chatModel.updateOne({email: emailId},{$set: {imgPath: imagePath}})
 
       if (previousProfilePhotoPath != DEFAULT_PROFILE_IMAGE) {
         const previousPublicId = extractPublicId(previousProfilePhotoPath)
