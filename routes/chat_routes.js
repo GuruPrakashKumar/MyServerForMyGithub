@@ -26,18 +26,23 @@ router.get('/search-user', authRoutes.verifyToken, async (req, res)=>{
   }
 })
 router.get('/getAllTargetEmails',authRoutes.verifyToken,async (req,resp)=>{// for fetching messages
-  try {
+  
     const userChat = await userChatModel.findOne({
       email:req.authData.email
     })
     if (!userChat) {
       return resp.status(404).json({ message: 'User chat history not found' });
     }
-    const targetEmails = userChat.chats.map(chat => chat.targetEmail);
+    const targetEmails = userChat.chats.map((chat) => {
+      // Get the last message for each target email
+      const lastMessage = chat.messages[chat.messages.length - 1];
+      return {
+        targetEmail: chat.targetEmail,
+        lastMessage: lastMessage,
+      };
+    });
     resp.status(200).json(targetEmails);
-  } catch (error) {
-    resp.status(500).json({message: 'server error'})
-  }
+ 
 })
 
 router.get('/getBasicDetails', authRoutes.verifyToken, async (req, resp) => {//for updating the profile photos and names in the chat
