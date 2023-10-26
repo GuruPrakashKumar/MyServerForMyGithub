@@ -5,8 +5,21 @@ const userChatModel = require('../models/chat_model');
 const User = require('../models/user_models');
 
 router.get('/suggested-users',authRoutes.verifyToken, async(req,res)=>{
+  const userChat = await userChatModel.findOne({email: req.authData.email},{chats:1})
+  const alreadyChatted = []
+  const newUsers=[]
+  for(chat of userChat.chats){
+    alreadyChatted.push(chat.targetEmail)
+  }
+  // console.log(userChat)
+  // console.log(alreadyChatted)
   const list = await userChatModel.find({},{name:1, email: 1, imgPath: 1})
-  res.status(200).json(list)
+  for(item of list){
+    if(!alreadyChatted.includes(item.email) && item.email != req.authData.email){
+      newUsers.push(item)
+    }
+  }
+  res.status(200).json(newUsers)
 })
 router.get('/search-user', authRoutes.verifyToken, async (req, res)=>{
   if(req.query.email){
@@ -41,7 +54,7 @@ router.get('/getAllTargetEmails',authRoutes.verifyToken,async (req,resp)=>{// fo
         lastMessage: lastMessage,
       };
     });
-    resp.status(200).json(targetEmails);
+    resp.status(200).json(targetEmails.reverse());
  
 })
 
