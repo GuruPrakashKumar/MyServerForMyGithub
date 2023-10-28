@@ -144,7 +144,7 @@ router.post('/signin', async (req, res) => {
         console.log("Invalid password");
         res.status(401).json({ message: 'Invalid credentials' });
       } else {
-        jwt.sign({ email: user.email }, jwtSecretKey, { expiresIn: "2h" }, (err, token) => {
+        jwt.sign({ email: user.email }, jwtSecretKey, { expiresIn: "7d" }, (err, token) => {
           if (err) {
             res.status(500).json({ message: "Internal Server Error" });
           }
