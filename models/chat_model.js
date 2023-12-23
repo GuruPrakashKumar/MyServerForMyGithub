@@ -5,6 +5,7 @@ const userChatSchema = new Schema({
     name: String,
     email: String,
     imgPath: String,
+    deviceToken: String,
     chats: [,
       {
         targetEmail: String,

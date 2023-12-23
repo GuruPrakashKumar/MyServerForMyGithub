@@ -4,6 +4,26 @@ const authRoutes = require('./auth_routes');
 const userChatModel = require('../models/chat_model');
 const User = require('../models/user_models');
 
+router.post('/get-device-token', authRoutes.verifyToken, async(req,res)=>{
+  const targetUser = await userChatModel.findOne({email: req.body.targetEmail}, {deviceToken: 1 });
+  const user = await userChatModel.findOne({email: req.authData.email},{name: 1,imgPath: 1 });
+  targetUser.name = user.name;
+  targetUser.imgPath = user.imgPath;
+  if(targetUser){
+    res.status(200).json(targetUser);
+  }else{
+    res.status(400).json({message: "something went wrong"})
+  }
+  
+})
+router.post('/update-device-token', authRoutes.verifyToken, async(req,res)=>{
+  const userChat = await userChatModel.updateOne({email: req.authData.email}, {$set:{deviceToken: req.body.deviceToken}});
+  if(userChat){
+    res.status(200).json({message: "device token updated"})
+  }else{
+    res.status(400).json({message: "something went wrong"})
+  }
+})
 router.get('/suggested-users',authRoutes.verifyToken, async(req,res)=>{
   const userChat = await userChatModel.findOne({email: req.authData.email},{chats:1})
   const alreadyChatted = []
