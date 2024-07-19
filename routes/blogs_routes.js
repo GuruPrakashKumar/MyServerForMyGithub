@@ -1,6 +1,18 @@
 // blogs_routes.js
 const express = require('express');
 const router = express.Router();
+// import OpenAI from "openai";
+// const OpenAI = require('openai') ;
+const { GoogleGenerativeAI } = require("@google/generative-ai");
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+
+
+
+// const openai = new OpenAI({
+//   apiKey: process.env.OPENAI_API_KEY,
+// });
+// const openai = process.env.OPENAI_API_KEY
+
 const BlogModel = require('../models/blog_model');
 const User = require('../models/user_models');
 // const {verifyToken} = require('./auth_routes');
@@ -11,21 +23,41 @@ const axios = require('axios')
 router.post('/correct-grammar', authRoutes.verifyToken, async (req, res) => {
   const inputText = req.body.blog;
   const inputTokens = inputText.split(' ').length;//gpt-3.5-turbo-instruct
-  const response = await axios.post('https://api.openai.com/v1/engines/text-davinci-002/completions', {
-    prompt: `Correct the following paragraph of sentences: "${inputText}"`,
-    max_tokens: inputTokens + 100,
-    temperature: 0.3,
-  }, {
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${process.env.OPEN_API_KEY}`,
-      // 'Authorization': `Bearer ${req.body.apiKey}`,
-    },
-  },)
-  const correctedText = response.data.choices[0].text;
-  if (correctedText) {
+
+  const model = genAI.getGenerativeModel({
+    model: 'gemini-1.5-flash',
+    generationConfig: { maxOutputTokens: inputTokens+100, temperature: 0.3 },
+  });
+  
+  const prompt = `Correct the following paragraph of sentences to the most grammatically correct way and return only the corrected paragraph or sentence: "${inputText}"`;
+  const result = await model.generateContent(prompt)
+  const response = await result.response;
+  const text = response.text();
+  const correctedText = text.replace(/\n$/, ''); // trims new line at the end of the response
+  if(text){
     res.status(200).json({ message: correctedText });
   }
+
+  // Old deprecated code
+  
+  // const response = await axios.post('https://api.openai.com/v1/engines/text-davinci-002/completions', {
+  //   prompt: `Correct the following paragraph of sentences: "${inputText}"`,
+  //   max_tokens: inputTokens + 100,
+  //   temperature: 0.3,
+  // }, {
+  //   headers: {
+  //     'Content-Type': 'application/json',
+  //     'Authorization': `Bearer ${process.env.OPEN_API_KEY}`,
+  //     // 'Authorization': `Bearer ${req.body.apiKey}`,
+  //   },
+  // },)
+
+
+  // console.log(response)
+  // const correctedText = response.data.choices[0].text;
+  // if (correctedText) {
+  //   res.status(200).json({ message: correctedText });
+  // }
 })
 
 // Like Blog Route

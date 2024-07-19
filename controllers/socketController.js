@@ -12,11 +12,10 @@ module.exports = (io) => {
 
     socket.on('signin', (senderEmail) => {
       // console.log(`sender uid is ${senderEmail}`);
-      // clients[senderEmail] = senderEmail;
-      // console.log(`clients is ${clients}`);
       socket.join(senderEmail)
       //save uid to database
     });
+    
 
     socket.on("message", (msg) => {
       // console.log(`msg is ${msg}`);
