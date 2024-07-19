@@ -144,7 +144,7 @@ router.post('/signin', async (req, res) => {
         console.log("Invalid password");
         res.status(401).json({ message: 'Invalid credentials' });
       } else {
-        jwt.sign({ email: user.email }, jwtSecretKey, { expiresIn: "7d" }, (err, token) => {
+        jwt.sign({ email: user.email }, jwtSecretKey, { expiresIn: "14d" }, (err, token) => {
           if (err) {
             res.status(500).json({ message: "Internal Server Error" });
           }
@@ -163,7 +163,7 @@ router.post('/forgotPassInit', async (req, res) => {
   if (existingUser != null && existingUser.password != null) {
     const otp = otpGenerator.generate(6, { upperCaseAlphabets: false, specialChars: false, lowerCaseAlphabets: false });
     const timestamp = Date.now()
-    // emailSender(otp,timestamp)
+    emailSender(otp,existingUser.email)
     await existingUser.updateOne({ $set: { otp: otp, timestamp: timestamp } })
     res.status(200).json({ message: "OTP sent to the user's email" })
   } else {
