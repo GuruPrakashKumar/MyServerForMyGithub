@@ -33,8 +33,8 @@ async function emailSender(otp, email) {
       port: 465,
       secure: true,
       auth: {
-        user: "guruprakash745@gmail.com",
-        pass: "hltmiudyulczlhmx"
+        user: process.env.SMTP_MAIL,
+        pass: process.env.SMTP_PASS
       }
     }
   );
